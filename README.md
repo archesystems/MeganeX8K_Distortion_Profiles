@@ -7,3 +7,5 @@ Put the profiles you want to use in the %APPDATA%\CustomHeadset\Distortion folde
 
 The MeganeX8K Default.json and MeganeX8K Original.json files are included for reference.
 If no file is in the Distortion folder, the default values are used (these are hardcoded in the driver).
+
+More infomation is at https://github.com/sboys3/CustomHeadsetOpenVR
