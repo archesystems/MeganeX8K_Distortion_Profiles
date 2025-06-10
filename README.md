@@ -9,3 +9,11 @@ The MeganeX8K Default.json and MeganeX8K Original.json files are included for re
 If no file is in the Distortion folder, the default values are used (these are hardcoded in the driver).
 
 More infomation is at https://github.com/sboys3/CustomHeadsetOpenVR
+
+The "distortions" section in the profile is the scaling applied to the image at the specified degree radially from the center.
+The first number is degrees, and the second number is percentage.
+
+The "distortionsRed" and "distortionsBlue" sections are for adjusting chromatic aberrations in the red and green channels.
+The first number is degrees and the second number is the adjustment factor.
+
+The "smoothAmount" section is the smoothing parameter for the RadialBezier function and its advised to leave it at 0.66
