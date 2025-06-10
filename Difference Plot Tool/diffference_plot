@@ -1,0 +1,80 @@
+import json
+import numpy as np
+from scipy.interpolate import CubicSpline
+import matplotlib.pyplot as plt
+import os
+
+def load_points_from_json(file_path):
+    with open(file_path, 'r') as file:
+        data = json.load(file)
+    points = np.array(data['distortions']).reshape(-1, 2)
+    return points
+
+# User-defined parameters
+directory_path = r'C:\Users\YOURUSERNAME\AppData\Roaming\CustomHeadset\Distortion'
+base_file_name = 'MeganeX8K Base.json'  # Set your base profile here
+num_common_points = 1000  # Resolution for comparison grid
+
+# Load all files and prepare data
+json_files = [f for f in os.listdir(directory_path) if f.endswith('.json')]
+points_dict = {}
+x_min, x_max = float('inf'), -float('inf')
+
+# First pass to gather data and compute global x range
+for json_file in json_files:
+    file_path = os.path.join(directory_path, json_file)
+    try:
+        points = load_points_from_json(file_path)
+        if len(points) < 2:
+            raise ValueError(f"{json_file} has insufficient points")
+        points_dict[json_file] = points
+        current_min = np.min(points[:, 0])
+        current_max = np.max(points[:, 0])
+        x_min = min(x_min, current_min)
+        x_max = max(x_max, current_max)
+    except Exception as e:
+        print(f"Issue with {json_file}: {str(e)}")
+
+# Verify base profile presence
+if base_file_name not in points_dict:
+    raise FileNotFoundError(f"Base file '{base_file_name}' not found")
+
+# Create common X-axis grid
+common_x = np.linspace(x_min, x_max, num_common_points)
+
+# Calculate base profile spline
+base_points = points_dict[base_file_name]
+base_spline = CubicSpline(base_points[:, 0], base_points[:, 1], bc_type='natural')
+base_y = base_spline(common_x)
+
+# Create visualization
+plt.figure(figsize=(12, 6))
+
+# Plot reference lines
+plt.axhline(0, color='black', linestyle='--', alpha=0.3, label='Base Level')
+
+# Plot all profiles compared to base
+for filename in json_files:
+    if filename == base_file_name:
+        continue  # Skip plotting the base itself
+
+    try:
+        points = points_dict[filename]
+        curve_spline = CubicSpline(points[:, 0], points[:, 1], bc_type='natural')
+        curve_y = curve_spline(common_x)
+        difference = curve_y - base_y
+
+        plt.plot(common_x, difference,
+                 label=f"{filename} vs Base",
+                 alpha=0.8, linewidth=1.5)
+    except Exception as e:
+        print(f"Error plotting {filename}: {e}")
+
+# Formatting
+plt.title('Distortion Profile Differences (Relative to Base)')
+plt.xlabel('Radius from Center (%)')
+plt.ylabel('Difference (Δ Radius from Base)')
+plt.grid(True, linestyle='--', alpha=0.7)
+plt.legend()
+plt.tight_layout()
+plt.show()
