@@ -1,0 +1,28 @@
+{
+    "description":"Meganex Essentia Close profile",
+	"author": "Essentia",
+	"creationDate": 1749169758.000,
+	"type":"RadialBezier",
+	"distortions":[
+		0.0000, 0.0,
+		5.0000, 12.479,
+		10.0000, 24.738,
+		15.0000, 36.627,
+		20.0000, 48.079,
+		25.0000, 59.088,
+		30.0000, 69.740,
+		35.0000, 79.974,
+		40.0000, 89.120,
+		45.0000, 96.338,
+		48.3073, 100.0
+	],
+	"distortionsRed":[
+		0, 0.6,
+		47.5, 0.6
+	],
+	"distortionsBlue":[
+		0, -0.8,
+		47.5, -0.8
+	],
+	"smoothAmount":0.66
+}
